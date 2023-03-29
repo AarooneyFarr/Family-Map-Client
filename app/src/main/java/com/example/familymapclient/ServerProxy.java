@@ -5,7 +5,12 @@ import java.net.*;
 import com.google.gson.Gson;
 
 import request.LoginRequest;
+import request.RegisterRequest;
+import result.EventsResponse;
 import result.LoginResponse;
+import result.PersonResponse;
+import result.PersonsResponse;
+import result.RegisterResponse;
 
 public class ServerProxy {
     // The client's "main" method.
@@ -96,19 +101,16 @@ public class ServerProxy {
     }
 
 
-    public static LoginResponse login(LoginRequest request) {
+    public static LoginResponse login(String server, String port, String username, String password) {
 
-        // This method shows how to send a POST request to a server
+
 
         try {
-            // Create a URL indicating where the server is running, and which
-            // web API operation we want to call
-            URL url = new URL("http://" + "localhost" + ":" + "8080" + "/routes/claim");
+
+            URL url = new URL("http://" + server + ":" + port + "/user/login");
 
 
-            // Start constructing our HTTP request
             HttpURLConnection http = (HttpURLConnection)url.openConnection();
-
 
             // Specify that we are sending an HTTP POST request
             http.setRequestMethod("POST");
@@ -132,16 +134,18 @@ public class ServerProxy {
             // This is the JSON string we will send in the HTTP request body
             String reqData =
                     "{" +
-                            "\"username\": \"" + request.getUsername() + "\"" +
-                            "\"password\": \"" + request.getPassword() + "\"" +
+                            "\"username\": \"" + username + "\"" +
+                            "\"password\": \"" + password + "\"" +
                             "}";
 
+            LoginRequest request = new LoginRequest(username, password);
+            Gson gson = new Gson();
 
             // Get the output stream containing the HTTP request body
             OutputStream reqBody = http.getOutputStream();
 
             // Write the JSON data to the request body
-            writeString(reqData, reqBody);
+            writeString(gson.toJson(request), reqBody);
 
             // Close the request body output stream, indicating that the
             // request is complete
@@ -167,9 +171,11 @@ public class ServerProxy {
                 // Display the JSON data returned from the server
                 System.out.println(respData);
 
-                Reader resBody = new InputStreamReader(http.getInputStream());
-                Gson gson = new Gson();
-                LoginResponse response = (LoginResponse) gson.fromJson(resBody, LoginResponse.class);
+                //Reader resBody = new InputStreamReader(http.getInputStream());
+                Gson gson2 = new Gson();
+                LoginResponse response = (LoginResponse) gson2.fromJson(respData, LoginResponse.class);
+
+                respBody.close();
 
                 return response;
             }
@@ -188,9 +194,10 @@ public class ServerProxy {
                 // Display the data returned from the server
                 System.out.println(respData);
 
-                Reader resBody = new InputStreamReader(http.getInputStream());
-                Gson gson = new Gson();
-                LoginResponse response = (LoginResponse) gson.fromJson(resBody, LoginResponse.class);
+                Gson gson3 = new Gson();
+                LoginResponse response = (LoginResponse) gson3.fromJson(respData, LoginResponse.class);
+
+                respBody.close();
 
                 return response;
             }
@@ -199,6 +206,360 @@ public class ServerProxy {
             // An exception was thrown, so display the exception's stack trace
             e.printStackTrace();
         }
+
+
+        return null;
+    }
+
+    public static RegisterResponse register(String server, String port, String username, String password, String firstName, String lastName, String mail, String gender) {
+
+        try {
+
+            URL url = new URL("http://" + server + ":" + port + "/user/register");
+
+
+            HttpURLConnection http = (HttpURLConnection)url.openConnection();
+
+            http.setRequestMethod("POST");
+
+
+            http.setDoOutput(true);	// There is a request body
+
+            http.addRequestProperty("Accept", "application/json");
+
+
+            http.connect();
+
+            RegisterRequest request = new RegisterRequest(username, password, mail, firstName, lastName, gender);
+            Gson gson = new Gson();
+
+            // Get the output stream containing the HTTP request body
+            OutputStream reqBody = http.getOutputStream();
+
+            // Write the JSON data to the request body
+            writeString(gson.toJson(request), reqBody);
+
+
+            reqBody.close();
+
+
+            // By the time we get here, the HTTP response has been received from the server.
+            // Check to make sure that the HTTP response from the server contains a 200
+            // status code, which means "success".  Treat anything else as a failure.
+            if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+                // The HTTP response status code indicates success,
+                // so print a success message
+                System.out.println("Register successful.");
+
+                // Get the input stream containing the HTTP response body
+                InputStream respBody = http.getInputStream();
+
+
+                // Extract JSON data from the HTTP response body
+                String respData = readString(respBody);
+
+                // Display the JSON data returned from the server
+                System.out.println(respData);
+
+                Gson gson2 = new Gson();
+                RegisterResponse response = (RegisterResponse) gson2.fromJson(respData, RegisterResponse.class);
+
+                respBody.close();
+
+                return response;
+            }
+            else {
+
+                // The HTTP response status code indicates an error
+                // occurred, so print out the message from the HTTP response
+                System.out.println("ERROR: " + http.getResponseMessage());
+
+                // Get the error stream containing the HTTP response body (if any)
+                InputStream respBody = http.getErrorStream();
+
+                // Extract data from the HTTP response body
+                String respData = readString(respBody);
+
+                // Display the data returned from the server
+                System.out.println(respData);
+
+                Gson gson3 = new Gson();
+                RegisterResponse response = (RegisterResponse) gson3.fromJson(respData, RegisterResponse.class);
+
+                respBody.close();
+
+                return response;
+            }
+        }
+        catch (IOException e) {
+            // An exception was thrown, so display the exception's stack trace
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+
+
+    public static PersonsResponse getPeople(String server, String port, String authtoken) {
+
+        try {
+
+            URL url = new URL("http://" + server + ":" + port + "/person");
+
+
+            HttpURLConnection http = (HttpURLConnection)url.openConnection();
+
+            http.setRequestMethod("GET");
+
+            http.addRequestProperty("Authorization", authtoken);
+
+//            http.setDoOutput(true);	// There is a request body
+
+            http.addRequestProperty("Accept", "application/json");
+
+
+            http.connect();
+
+//            PersonsRequest request = new PersonsRequest(username, password, mail, firstName, lastName, gender);
+//            Gson gson = new Gson();
+//
+//            // Get the output stream containing the HTTP request body
+//            OutputStream reqBody = http.getOutputStream();
+//
+//            // Write the JSON data to the request body
+//            writeString(gson.toJson(request), reqBody);
+//
+//
+//            reqBody.close();
+
+
+            // By the time we get here, the HTTP response has been received from the server.
+            // Check to make sure that the HTTP response from the server contains a 200
+            // status code, which means "success".  Treat anything else as a failure.
+            if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+                // The HTTP response status code indicates success,
+                // so print a success message
+                System.out.println("Persons request successful.");
+
+                // Get the input stream containing the HTTP response body
+                InputStream respBody = http.getInputStream();
+
+
+                // Extract JSON data from the HTTP response body
+                String respData = readString(respBody);
+
+                // Display the JSON data returned from the server
+                System.out.println(respData);
+
+                Gson gson2 = new Gson();
+                PersonsResponse response = (PersonsResponse) gson2.fromJson(respData, PersonsResponse.class);
+
+                respBody.close();
+
+                return response;
+            }
+            else {
+
+                // The HTTP response status code indicates an error
+                // occurred, so print out the message from the HTTP response
+                System.out.println("ERROR: " + http.getResponseMessage());
+
+                // Get the error stream containing the HTTP response body (if any)
+                InputStream respBody = http.getErrorStream();
+
+                // Extract data from the HTTP response body
+                String respData = readString(respBody);
+
+                // Display the data returned from the server
+                System.out.println(respData);
+
+                Gson gson3 = new Gson();
+                PersonsResponse response = (PersonsResponse) gson3.fromJson(respData, PersonsResponse.class);
+
+                respBody.close();
+
+                return response;
+            }
+        }
+        catch (IOException e) {
+            // An exception was thrown, so display the exception's stack trace
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+
+    public static PersonResponse getPerson(String server, String port, String authtoken, String personId) {
+
+        try {
+
+            URL url = new URL("http://" + server + ":" + port + "/person/" + personId);
+
+
+            HttpURLConnection http = (HttpURLConnection)url.openConnection();
+
+            http.setRequestMethod("GET");
+
+            http.addRequestProperty("Authorization", authtoken);
+
+//            http.setDoOutput(true);	// There is a request body
+
+            http.addRequestProperty("Accept", "application/json");
+
+
+            http.connect();
+
+//            PersonsRequest request = new PersonsRequest(username, password, mail, firstName, lastName, gender);
+//            Gson gson = new Gson();
+//
+//            // Get the output stream containing the HTTP request body
+//            OutputStream reqBody = http.getOutputStream();
+//
+//            // Write the JSON data to the request body
+//            writeString(gson.toJson(request), reqBody);
+//
+//
+//            reqBody.close();
+
+
+            // By the time we get here, the HTTP response has been received from the server.
+            // Check to make sure that the HTTP response from the server contains a 200
+            // status code, which means "success".  Treat anything else as a failure.
+            if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+                // The HTTP response status code indicates success,
+                // so print a success message
+                System.out.println("Person request successful.");
+
+                // Get the input stream containing the HTTP response body
+                InputStream respBody = http.getInputStream();
+
+
+                // Extract JSON data from the HTTP response body
+                String respData = readString(respBody);
+
+                // Display the JSON data returned from the server
+                System.out.println(respData);
+
+                Gson gson2 = new Gson();
+                PersonResponse response = (PersonResponse) gson2.fromJson(respData, PersonResponse.class);
+
+                respBody.close();
+
+                return response;
+            }
+            else {
+
+                // The HTTP response status code indicates an error
+                // occurred, so print out the message from the HTTP response
+                System.out.println("ERROR: " + http.getResponseMessage());
+
+                // Get the error stream containing the HTTP response body (if any)
+                InputStream respBody = http.getErrorStream();
+
+                // Extract data from the HTTP response body
+                String respData = readString(respBody);
+
+                // Display the data returned from the server
+                System.out.println(respData);
+
+                Gson gson3 = new Gson();
+                PersonResponse response = (PersonResponse) gson3.fromJson(respData, PersonResponse.class);
+
+                respBody.close();
+
+                return response;
+            }
+        }
+        catch (IOException e) {
+            // An exception was thrown, so display the exception's stack trace
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+
+    public static EventsResponse getEvents(String server, String port, String authtoken) {
+
+        try {
+
+            URL url = new URL("http://" + server + ":" + port + "/event");
+
+
+            HttpURLConnection http = (HttpURLConnection)url.openConnection();
+
+            http.setRequestMethod("GET");
+
+            http.addRequestProperty("Authorization", authtoken);
+
+//            http.setDoOutput(true);	// There is a request body
+
+            http.addRequestProperty("Accept", "application/json");
+
+
+            http.connect();
+
+
+
+            // By the time we get here, the HTTP response has been received from the server.
+            // Check to make sure that the HTTP response from the server contains a 200
+            // status code, which means "success".  Treat anything else as a failure.
+            if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+                // The HTTP response status code indicates success,
+                // so print a success message
+                System.out.println("Events request successful.");
+
+                // Get the input stream containing the HTTP response body
+                InputStream respBody = http.getInputStream();
+
+
+                // Extract JSON data from the HTTP response body
+                String respData = readString(respBody);
+
+                // Display the JSON data returned from the server
+                System.out.println(respData);
+
+                Gson gson2 = new Gson();
+                EventsResponse response = (EventsResponse) gson2.fromJson(respData, EventsResponse.class);
+
+                respBody.close();
+
+                return response;
+            }
+            else {
+
+                // The HTTP response status code indicates an error
+                // occurred, so print out the message from the HTTP response
+                System.out.println("ERROR: " + http.getResponseMessage());
+
+                // Get the error stream containing the HTTP response body (if any)
+                InputStream respBody = http.getErrorStream();
+
+                // Extract data from the HTTP response body
+                String respData = readString(respBody);
+
+                // Display the data returned from the server
+                System.out.println(respData);
+
+                Gson gson3 = new Gson();
+                EventsResponse response = (EventsResponse) gson3.fromJson(respData, EventsResponse.class);
+
+                respBody.close();
+
+                return response;
+            }
+        }
+        catch (IOException e) {
+            // An exception was thrown, so display the exception's stack trace
+            e.printStackTrace();
+        }
+
 
         return null;
     }
