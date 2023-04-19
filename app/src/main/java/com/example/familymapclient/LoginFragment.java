@@ -135,7 +135,7 @@ public class LoginFragment extends Fragment {
                         String personId = bundle.getString(PERSON_ID_KEY);
                         String authToken = bundle.getString(AUTHTOKEN_KEY);
                         getPersonData(authToken, personId);
-//                        listener.notifyDone();
+
                     }
                     else {
                         Toast.makeText(getActivity(), "Error: register error", Toast.LENGTH_SHORT).show();
@@ -162,7 +162,7 @@ public class LoginFragment extends Fragment {
                             String personId = bundle.getString(PERSON_ID_KEY);
                             String authToken = bundle.getString(AUTHTOKEN_KEY);
                             getPersonData(authToken, personId);
-
+//                            listener.notifyDone();
                         }
                         else {
                             Toast.makeText(getActivity(), "Error: login error", Toast.LENGTH_SHORT).show();
@@ -223,7 +223,7 @@ public class LoginFragment extends Fragment {
 
                     dataCache.setCurrentUser(user);
                     Toast.makeText(getActivity(), "Welcome " + user.getFirstName() + " " + user.getLastName(), Toast.LENGTH_SHORT).show();
-//                    listener.notifyDone();
+                    listener.notifyDone();
                 }
                 else {
                     Toast.makeText(getActivity(), "Error: person error", Toast.LENGTH_SHORT).show();
@@ -265,9 +265,10 @@ public class LoginFragment extends Fragment {
         getEventsTask eventsTask = new getEventsTask(eventsHandler, authtoken);
         getPersonTask personTask = new getPersonTask(personHandler, authtoken, personID);
         ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(personTask);
         executor.submit(peopleTask);
         executor.submit(eventsTask);
-        executor.submit(personTask);
+
     }
 
     private class LoginTask implements Runnable {

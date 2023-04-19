@@ -13,7 +13,8 @@
     <string name="register">Register</string>
     <string name="defaultHost">10.0.2.2</string>
     <string name="defaultPort">8080</string>
-    <string name="defaultUser">yim</string>
+    <string name="defaultUser">sheila</string>
+    <string name="defaultPassword">parker</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -23,7 +24,64 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="title_activity_maps">MapsActivity</string>
+
+    <!--  Strings for logos -->
+    <string name="searchString">Search</string>
+    <string name="settingsString">Settings</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <!--  Settings Strings      -->
+    <string name="lifeStory1">Life Story Lines</string>
+    <string name="lifeStory2">SHOW LIFE STORY LINES</string>
+
+    <string name="familyTree1">Family Tree Lines</string>
+    <string name="familyTree2">SHOW FAMILY TREE LINES</string>
+
+    <string name="spouse1">Spouse Lines</string>
+    <string name="spouse2">SHOW SPOUSE LINES</string>
+
+    <string name="father1">Father\'s side</string>
+    <string name="father2">FILTER BY FATHER\'S SIDE OF FAMILY</string>
+
+    <string name="mother1">Mother\'s side</string>
+    <string name="mother2">FILTER BY MOTHER\'S SIDE OF FAMILY</string>
+
+    <string name="male1">Male Events</string>
+    <string name="male2">FILTER EVENTS BASED ON GENDER</string>
+
+    <string name="female1">Female Events</string>
+    <string name="female2">FILTER EVENTS BASED ON GENDER</string>
+
+    <string name="logout1">Logout</string>
+    <string name="logout2">RETURN TO LOGIN SCREEN</string>
+
+    <string name="eventsTitle">LIFE EVENTS</string>
+    <string name="peopleTitle">FAMILY</string>
+
 </resources>
